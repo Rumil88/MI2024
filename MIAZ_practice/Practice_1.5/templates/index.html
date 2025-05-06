@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Облік студентів</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .student-form {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .student-list {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .delete-btn {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Облік студентів</h1>
+    
+    <div class="student-form">
+        <h2>Додати нового студента</h2>
+        <form id="addStudentForm">
+            <div>
+                <label for="name">Ім'я:</label>
+                <input type="text" id="name" required>
+            </div>
+            <div>
+                <label for="enrollment_date">Дата зарахування:</label>
+                <input type="date" id="enrollment_date" required>
+            </div>
+            <button type="submit" class="submit-btn">Додати студента</button>
+        </form>
+    </div>
+
+    <div class="student-list">
+        <h2>Список студентів</h2>
+        <div id="studentsList"></div>
+    </div>
+
+    <script>
+        // Функція для завантаження списку студентів
+        async function loadStudents() {
+            const response = await fetch('/api/students');
+            const students = await response.json();
+            const studentsList = document.getElementById('studentsList');
+            studentsList.innerHTML = '';
+            
+            students.forEach(student => {
+                const studentElement = document.createElement('div');
+                studentElement.className = 'student-item';
+                studentElement.innerHTML = `
+                    <div>
+                        <strong>${student.name}</strong> - 
+                        Зараховано: ${student.enrollment_date}
+                    </div>
+                    <button class="delete-btn" onclick="deleteStudent(${student.student_id})">Видалити</button>
+                `;
+                studentsList.appendChild(studentElement);
+            });
+        }
+
+        // Функція для додавання нового студента
+        document.getElementById('addStudentForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const enrollment_date = document.getElementById('enrollment_date').value;
+            
+            await fetch('/api/students', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, enrollment_date })
+            });
+            
+            document.getElementById('name').value = '';
+            document.getElementById('enrollment_date').value = '';
+            loadStudents();
+        };
+
+        // Функція для видалення студента
+        async function deleteStudent(studentId) {
+            await fetch(`/api/students/${studentId}`, {
+                method: 'DELETE'
+            });
+            loadStudents();
+        }
+
+        // Завантаження списку студентів при завантаженні сторінки
+        loadStudents();
+    </script>
+</body>
+</html>

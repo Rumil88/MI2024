@@ -1,0 +1,101 @@
+Завантажте вибраний набір даних у форматі CSV.
+Завантажте дані в Python за допомогою Pandas.
+Перегляньте структуру набору даних і перші кілька рядків.
+Код:
+
+import pandas as pd
+
+# Завантаження даних
+df = pd.read_csv('path_to_your_dataset.csv')
+
+# Перегляд перших рядків
+print(df.head())
+
+# Огляд інформації про набір даних
+print(df.info())
+Очищення даних:
+
+Перевірте наявність пропущених значень у даних.
+Заповніть пропущені значення або видаліть їх, використовуючи відповідні методи.
+Видаліть дублікатори (якщо є).
+Перетворіть категоріальні змінні на числові значення (якщо потрібно).
+Код:
+
+# Перевірка на пропущені значення
+print(df.isnull().sum())
+
+# Заповнення пропущених значень середнім значенням для числових стовпців
+df.fillna(df.mean(), inplace=True)
+
+# Видалення дублікатів
+df.drop_duplicates(inplace=True)
+
+# Перетворення категоріальних змінних на числові (якщо потрібно)
+df['category_column'] = df['category_column'].astype('category').cat.codes
+Трансформація даних:
+
+Виконайте нормалізацію кількісних змінних.
+Перетворіть категоріальні змінні на числові за допомогою One-Hot Encoding або Label Encoding.
+Код:
+
+from sklearn.preprocessing import MinMaxScaler
+
+# Нормалізація числових змінних
+scaler = MinMaxScaler()
+df['scaled_column'] = scaler.fit_transform(df[['numerical_column']])
+
+# One-Hot Encoding для категоріальних змінних
+df_transformed = pd.get_dummies(df, columns=['category_column'])
+
+print(df_transformed.head())
+Декомпозиція набору даних:
+
+Поділіть дані на навчальну та тестову вибірки (80% на навчання, 20% на тестування).
+Проведіть кореляційний аналіз для кількісних змінних.
+Код:
+
+from sklearn.model_selection import train_test_split
+
+# Поділ на навчальну та тестову вибірки
+train_set, test_set = train_test_split(df_transformed, test_size=0.2, random_state=42)
+
+# Кореляційна матриця
+correlation_matrix = df.corr()
+print(correlation_matrix)
+Описова статистика та візуалізація:
+
+Виконайте описову статистику для числових змінних.
+Побудуйте графіки для аналізу розподілу змінних, викидів та взаємозв'язків між змінними.
+Код:
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Описова статистика
+print(df.describe())
+
+# Гістограма для кількісної змінної
+sns.histplot(df['numerical_column'], bins=10, kde=True)
+plt.show()
+
+# Коробкова діаграма
+sns.boxplot(x=df['numerical_column'])
+plt.show()
+
+# Діаграма розсіювання
+sns.scatterplot(x=df['numerical_column_1'], y=df['numerical_column_2'])
+plt.show()
+Побудова моделі:
+
+Побудуйте просту модель на основі навчальної вибірки (наприклад, лінійна регресія або класифікація) для прогнозування однієї з кількісних або категоріальних змінних.
+Код:
+
+from sklearn.linear_model import LinearRegression
+
+# Приклад лінійної регресії
+model = LinearRegression()
+model.fit(train_set[['feature1', 'feature2']], train_set['target'])
+
+# Прогноз на тестовій вибірці
+predictions = model.predict(test_set[['feature1', 'feature2']])
+print(predictions)

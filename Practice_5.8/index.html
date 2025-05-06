@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дашборд FPV-дронів</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Статистика застосування FPV-дронів</h1>
+        </header>
+        
+        <div class="dashboard">
+            <div class="controls">
+                <button id="simple-mode" class="active">Спрощений режим</button>
+                <button id="detailed-mode">Детальний режим</button>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="droneChart"></canvas>
+            </div>
+            
+            <div class="info-panel">
+                <h3>Інформація про дані</h3>
+                <p>Графік відображає статистику застосування FPV-дронів Збройними Силами України та російськими військами.</p>
+                <p>Дані зібрані з відкритих джерел та можуть бути неповними.</p>
+                <div id="detailed-info" class="hidden">
+                    <h4>Додаткова інформація</h4>
+                    <p>У детальному режимі відображаються дані по кварталах, що дозволяє побачити динаміку застосування дронів.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
